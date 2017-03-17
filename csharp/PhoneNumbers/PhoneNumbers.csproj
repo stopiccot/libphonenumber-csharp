@@ -1,46 +1,66 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Description>C# port of Google's common Java, C++ and Javascript library for parsing, formatting, storing and validating international phone numbers. For usage samples: http: //code.google.com/p/libphonenumber/A port of Google's libphonenumber for .NET Core</Description>
-    <AssemblyTitle>libphonenumber-csharp</AssemblyTitle>
-    <VersionPrefix>8.3.1</VersionPrefix>
-    <Authors>Patrick M�zard;Jarrod Alexander;Google;libphonenumber;contributors</Authors>
-    <TargetFrameworks>net45;netstandard1.0</TargetFrameworks>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7D41F8C8-3C86-4370-8E53-035BE4CFE34C}</ProjectGuid>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PhoneNumbers</RootNamespace>
     <AssemblyName>PhoneNumbers</AssemblyName>
-    <PackageId>PhoneNumbers</PackageId>
-    <PackageTags>phonenumber phone libphonenumber e164 e.164 international</PackageTags>
-    <PackageProjectUrl>https://bitbucket.org/pmezard/libphonenumber-csharp/wiki/Home</PackageProjectUrl>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/jarroda/libphonenumber-dotnet</RepositoryUrl>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.0' ">1.6.0</NetStandardImplicitPackageVersion>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="res\**\*.*;PhoneNumberAlternateFormats.xml;PhoneNumberMetaData.xml;PhoneNumberMetaDataForTesting.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AreaCodeMap.cs" />
+    <Compile Include="AreaCodeMapStorageStrategy.cs" />
+    <Compile Include="AreaCodeParser.cs" />
+    <Compile Include="AsYouTypeFormatter.cs" />
+    <Compile Include="BuildMetadataFromXml.cs" />
+    <Compile Include="CountryCodeToRegionCodeMap.cs" />
+    <Compile Include="DefaultMapStorage.cs" />
+    <Compile Include="FlyweightMapStorage.cs" />
+    <Compile Include="InternalRegexOptions.cs" />
+    <Compile Include="LocaleData.cs" />
+    <Compile Include="MappingFileProvider.cs" />
+    <Compile Include="MetadataManager.cs" />
+    <Compile Include="NetCoreShim.cs" />
+    <Compile Include="NumberParseException.cs" />
+    <Compile Include="Phonemetadata.cs" />
+    <Compile Include="Phonenumber.cs" />
+    <Compile Include="PhoneNumberMatch.cs" />
+    <Compile Include="PhoneNumberMatcher.cs" />
+    <Compile Include="PhoneNumberOfflineGeocoder.cs" />
+    <Compile Include="PhoneNumberUtil.cs" />
+    <Compile Include="PhoneRegex.cs" />
+    <Compile Include="RegexCache.cs" />
+    <Compile Include="RegionCode.cs" />
+    <Compile Include="ShortNumberUtil.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Linq" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Json" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+  <ItemGroup>
+    <EmbeddedResource Include="PhoneNumberMetaData.xml">
+      <LogicalName>PhoneNumberMetaData.xml</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
-    <PackageReference Include="System.Runtime.Serialization.Json" Version="4.0.2" />
+  <ItemGroup>
+    <None Include="project.json" />
   </ItemGroup>
-
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
