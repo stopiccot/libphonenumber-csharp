@@ -63,9 +63,21 @@ namespace PhoneNumbers
         private static readonly String VOICEMAIL = "voicemail";
         private static readonly String VOIP = "voip";
 
+        private static PhoneMetadataCollection _liteCollection = null;
+
+        private static PhoneMetadataCollection _collection = null;
+
         // Build the PhoneMetadataCollection from the input XML file.
         public static PhoneMetadataCollection BuildPhoneMetadataCollection(Stream input, bool liteBuild)
         {
+            if (liteBuild && _liteCollection != null) {
+                return _liteCollection;
+            }
+
+            if (!liteBuild && _collection != null) {
+                return _collection;
+            }
+
             var document = XDocument.Load(input);
             
             var metadataCollection = new PhoneMetadataCollection.Builder();
@@ -79,7 +91,16 @@ namespace PhoneNumbers
                 PhoneMetadata metadata = LoadCountryMetadata(regionCode, territory, liteBuild);
                 metadataCollection.AddMetadata(metadata);
             }
-            return metadataCollection.Build();
+
+            var result = metadataCollection.Build();
+
+            if (liteBuild) {
+                _liteCollection = result;
+            } else {
+                _collection = result;
+            }
+
+            return result;
         }
 
         // Build a mapping from a country calling code to the region codes which denote the country/region
@@ -123,9 +144,12 @@ namespace PhoneNumbers
         {
             // Removes all the whitespace and newline from the regexp. Not using pattern compile options to
             // make it work across programming languages.
-            if (removeWhitespace)
-                regex = Regex.Replace(regex, "\\s", "");
-            new Regex(regex, InternalRegexOptions.Default);
+            if (removeWhitespace) {
+                //regex = Regex.Replace(regex, "\\s", "");
+                regex = regex.Replace(" ", "");
+            }
+
+            //new Regex(regex, InternalRegexOptions.Default);
             // return regex itself if it is of correct regex syntax
             // i.e. compile did not fail with a PatternSyntaxException.
             return regex;
